@@ -1,0 +1,6 @@
+{
+  "githubToken": "fill-in-your-token-here",
+  "owner": "JetBrains",
+  "repository": "Kotlin",
+  "refreshRate": 30
+}
