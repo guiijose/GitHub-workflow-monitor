@@ -3,7 +3,6 @@ package com.guilhermejose;
 import com.guilhermejose.client.GitHubClient;
 import com.guilhermejose.model.*;
 import java.util.ArrayList;
-
 public class App 
 {
     public static void main( String[] args )
@@ -18,12 +17,20 @@ public class App
 
         GitHubClient gitHubClient = new GitHubClient(config.getGithubToken());
         System.out.println("GitHub Client initialized with token: " + gitHubClient.getToken());
-        WorkflowRunsResponse resonse = gitHubClient.fetchWorkflowRuns(config.getOwner(), config.getRepository());
-        ArrayList<WorkflowRun> runs = (ArrayList<WorkflowRun>) resonse.getWorkflowRuns();
+        WorkflowRunsResponse response = gitHubClient.fetchWorkflowRuns(config.getOwner(), config.getRepository());
+        ArrayList<WorkflowRun> runs = (ArrayList<WorkflowRun>) response.getWorkflowRuns();
+        System.out.println("Total Workflow Runs fetched: " + runs.size());
 
-        for (int i = 0; i < runs.size(); i++) {
-            System.out.println("Workflow run #" + (i + 1) + ":");
-            System.out.println("\t" + runs.get(i).toString());
+        for (WorkflowRun run : runs) {
+            System.out.println(run);
+            JobsResponse jobsResponse = gitHubClient.fetchWorkflowRunInfo(config.getOwner(), config.getRepository(), run.getId());
+
+            for (Job job : jobsResponse.getJobs()) {
+                System.out.println("\t" + job);
+                for (Step step : job.getSteps()) {
+                    System.out.println(step);
+                }
+            }
         }
 
     }
