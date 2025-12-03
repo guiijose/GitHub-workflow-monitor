@@ -40,3 +40,8 @@ MAVEN_COMMANDS.txt
 
 # config file with sensitive data
 src/main/resources/config.json
+
+# Eclipse
+.settings/
+.classpath
+.project
