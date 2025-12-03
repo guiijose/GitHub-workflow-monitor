@@ -1,7 +1,8 @@
 package com.guilhermejose.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.OffsetDateTime;
+
+import java.time.Instant;
 import java.util.List;
 
 public class Job {
@@ -32,11 +33,6 @@ public class Job {
     @JsonProperty("conclusion")
     private String conclusion;
 
-    @JsonProperty("started_at")
-    private OffsetDateTime startedAt;
-
-    @JsonProperty("completed_at")
-    private OffsetDateTime completedAt;
 
     @JsonProperty("name")
     private String name;
@@ -67,6 +63,15 @@ public class Job {
 
     @JsonProperty("head_branch")
     private String headBranch;
+
+    @JsonProperty("updated_at")
+    private Instant updatedAt;
+
+    @JsonProperty("started_at")
+    private Instant startedAt;
+
+    @JsonProperty("completed_at")
+    private Instant completedAt;
 
     // Getters and Setters
     public long getId() {
@@ -141,19 +146,27 @@ public class Job {
         this.conclusion = conclusion;
     }
 
-    public OffsetDateTime getStartedAt() {
+    public Instant getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(OffsetDateTime startedAt) {
+    public void setStartedAt(Instant startedAt) {
         this.startedAt = startedAt;
     }
 
-    public OffsetDateTime getCompletedAt() {
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Instant getCompletedAt() {
         return completedAt;
     }
 
-    public void setCompletedAt(OffsetDateTime completedAt) {
+    public void setCompletedAt(Instant completedAt) {
         this.completedAt = completedAt;
     }
 
