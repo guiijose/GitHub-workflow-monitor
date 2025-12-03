@@ -8,7 +8,7 @@ public class WorkflowRun {
 
     private Long id;
     private String name;
-    private String status;
+    private Status status;
     private String conclusion;
     private String event;
 
@@ -22,8 +22,8 @@ public class WorkflowRun {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 
     public String getConclusion() { return conclusion; }
     public void setConclusion(String conclusion) { this.conclusion = conclusion; }
