@@ -2,6 +2,7 @@ package com.guilhermejose.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkflowRun {
@@ -25,7 +26,13 @@ public class WorkflowRun {
     private Long runAttempt;
 
     @JsonProperty("created_at")
-    private String createdAt;
+    private Instant createdAt;
+
+    @JsonProperty("run_started_at")
+    private Instant runStartedAt;
+
+    @JsonProperty("updated_at")
+    private Instant updatedAt;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -45,6 +52,12 @@ public class WorkflowRun {
 
     public Long getRunAttempt() { return runAttempt; }
     public void setRunAttempt(Long runAttempt) { this.runAttempt = runAttempt; }
+
+    public Instant getCreatedAt() { return createdAt; }
+
+    public Instant getStartedAt() { return runStartedAt; }
+
+    public Instant getUpdatedAt() { return updatedAt; }
 
     public boolean isActive() { return !(status == Status.COMPLETED); }
 
