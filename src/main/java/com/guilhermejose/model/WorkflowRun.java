@@ -6,11 +6,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkflowRun {
 
+    @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("name")
     private String name;
+    
+    @JsonProperty("status")
     private Status status;
+
+    @JsonProperty("conclusion")
     private String conclusion;
+    
+    @JsonProperty("event")
     private String event;
+    
+    @JsonProperty("run_attempt")
+    private Long runAttempt;
 
     @JsonProperty("created_at")
     private String createdAt;
@@ -31,6 +43,11 @@ public class WorkflowRun {
     public String getEvent() { return event; }
     public void setEvent(String event) { this.event = event; }
 
+    public Long getRunAttempt() { return runAttempt; }
+    public void setRunAttempt(Long runAttempt) { this.runAttempt = runAttempt; }
+
+    public boolean isActive() { return !(status == Status.COMPLETED); }
+
     @Override
     public String toString() {
         return "WorkflowRun{" +
@@ -40,6 +57,7 @@ public class WorkflowRun {
                 ", conclusion='" + conclusion + '\'' +
                 ", event='" + event + '\'' +
                 ", createdAt='" + createdAt + '\'' +
+                ", runAttempt='" + runAttempt + '\'' +
                 '}';
     }
     

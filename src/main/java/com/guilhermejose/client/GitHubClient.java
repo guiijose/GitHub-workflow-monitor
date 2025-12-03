@@ -74,7 +74,7 @@ public class GitHubClient {
     /**
      * 
      */
-    public JobsResponse fetchWorkflowRunInfo(String owner, String repo, long runId) {
+    public JobsResponse fetchJobs(String owner, String repo, long runId) {
         String url = String.format("%s/repos/%s/%s/actions/runs/%d/jobs", BASE_URL, encode(owner), encode(repo), runId);
         HttpRequest request = newRequest(url).GET().build();
 
