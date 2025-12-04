@@ -1,7 +1,7 @@
 package com.guilhermejose.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 public class Step {
     @JsonProperty("name")
@@ -17,10 +17,10 @@ public class Step {
     private int number;
 
     @JsonProperty("started_at")
-    private OffsetDateTime startedAt;
+    private Instant startedAt;
 
     @JsonProperty("completed_at")
-    private OffsetDateTime completedAt;
+    private Instant completedAt;
 
     // Getters and Setters
     public String getName() {
@@ -55,19 +55,19 @@ public class Step {
         this.number = number;
     }
 
-    public OffsetDateTime getStartedAt() {
+    public Instant getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(OffsetDateTime startedAt) {
+    public void setStartedAt(Instant startedAt) {
         this.startedAt = startedAt;
     }
 
-    public OffsetDateTime getCompletedAt() {
+    public Instant getCompletedAt() {
         return completedAt;
     }
 
-    public void setCompletedAt(OffsetDateTime completedAt) {
+    public void setCompletedAt(Instant completedAt) {
         this.completedAt = completedAt;
     }
 
