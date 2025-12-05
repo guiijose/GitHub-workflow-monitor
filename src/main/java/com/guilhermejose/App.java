@@ -1,8 +1,9 @@
 package com.guilhermejose;
 
 import com.guilhermejose.client.GitHubClient;
-import com.guilhermejose.model.*;
-import java.util.ArrayList;
+import com.guilhermejose.repository.RepositoryState;
+import com.guilhermejose.repository.RepositoryStateManager;
+
 public class App 
 {
     public static void main( String[] args )
@@ -16,22 +17,12 @@ public class App
         }
 
         GitHubClient gitHubClient = new GitHubClient(config.getGithubToken());
-        System.out.println("GitHub Client initialized with token: " + gitHubClient.getToken());
-        WorkflowRunsResponse response = gitHubClient.fetchWorkflowRuns(config.getOwner(), config.getRepository());
-        ArrayList<WorkflowRun> runs = (ArrayList<WorkflowRun>) response.getWorkflowRuns();
-        System.out.println("Total Workflow Runs fetched: " + runs.size());
+        RepositoryState state = new RepositoryState();
+        RepositoryStateManager manager = new RepositoryStateManager("");
 
-        for (WorkflowRun run : runs) {
-            System.out.println(run);
-            JobsResponse jobsResponse = gitHubClient.fetchWorkflowRunInfo(config.getOwner(), config.getRepository(), run.getId());
+        Monitor monitor = new Monitor(gitHubClient, state, manager, config.getOwner(), config.getRepository(), config.getRefreshRate());
 
-            for (Job job : jobsResponse.getJobs()) {
-                System.out.println("\t" + job);
-                for (Step step : job.getSteps()) {
-                    System.out.println(step);
-                }
-            }
-        }
+        monitor.run();
 
     }
 }
