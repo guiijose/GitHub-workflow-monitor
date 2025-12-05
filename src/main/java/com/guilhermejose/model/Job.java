@@ -1,9 +1,12 @@
 package com.guilhermejose.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Job {
     @JsonProperty("id")
@@ -178,14 +181,6 @@ public class Job {
         this.name = name;
     }
 
-    public List<Step> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
-    }
-
     public String getCheckRunUrl() {
         return checkRunUrl;
     }
@@ -248,6 +243,17 @@ public class Job {
 
     public void setHeadBranch(String headBranch) {
         this.headBranch = headBranch;
+    }
+
+    public List<Step> getSteps() {
+        return this.steps;
+    }
+
+    public Step getStep(int stepNumber) {
+        for (Step step : this.steps) {
+            if (stepNumber == step.getNumber()) return step;
+        }
+        return null;
     }
 
     @Override
