@@ -7,34 +7,35 @@ import com.guilhermejose.model.Status;
 public class StepEvent extends Event {
     private long runId;
     private long jobId;
-    private String stepName;
+    private int stepNumber;
     private Status status; // started, completed
     private String conclusion;
 
-    public StepEvent(Long runId, Long jobId, String stepName, Status status, Instant timestamp, String conclusion) {
+    public StepEvent(Long runId, Long jobId, int stepNumber, Status status, Instant timestamp, String conclusion) {
         super(timestamp);
         this.runId = runId;
         this.jobId = jobId;
-        this.stepName = stepName;
+        this.stepNumber = stepNumber;
         this.status = status;
         this.conclusion = conclusion;
     }
 
     @Override
     public String format() {
-        if (status == Status.IN_PROGRESS) {
+        if (status == Status.IN_PROGRESS || status == Status.QUEUED) {
             return String.format(
-                "%s STEP STARTED\tstep: %s\tjob: %d\trun: %d",
+                "%s STEP %s\tstep: %d\tjob: %d\trun: %d",
                 timestampString(),
-                stepName,
+                (status == Status.IN_PROGRESS) ? "STARTED" : "QUEUED",
+                stepNumber,
                 jobId,
                 runId
             );
         } else if (status == Status.COMPLETED) {
             return String.format(
-                "%s STEP COMPLETED\tstep: %s\tjob: %d\trun: %d\tconclusion: %s",
+                "%s STEP COMPLETED\tstep: %d\tjob: %d\trun: %d\tconclusion: %s",
                 timestampString(),
-                stepName,
+                stepNumber,
                 jobId,
                 runId,
                 conclusion

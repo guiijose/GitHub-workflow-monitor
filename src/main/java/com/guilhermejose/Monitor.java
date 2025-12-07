@@ -63,42 +63,14 @@ private void handleRun(WorkflowRun run) {
     Long runAttempt = run.getRunAttempt();
     JobsResponse jobsResponse = client.fetchJobs(owner, repo, run.getId());
 
-    Status runStatus = run.getStatus();
-    String runConclusion = run.getConclusion();
-
-    if (runStatus == Status.QUEUED) {
-        eventQueue.add(new WorkflowRunEvent(
-                run.getId(),
-                runAttempt,
-                Status.QUEUED,
-                run.getUpdatedAt(),
-                null
-        ));
-    } else if (runStatus == Status.IN_PROGRESS) {
-        eventQueue.add(new WorkflowRunEvent(
-                run.getId(),
-                runAttempt,
-                Status.IN_PROGRESS,
-                run.getStartedAt(),
-                null
-        ));
-    } else if (runStatus == Status.COMPLETED) {
-
-        eventQueue.add(new WorkflowRunEvent(
-                run.getId(),
-                runAttempt,
-                Status.IN_PROGRESS,
-                run.getStartedAt(),
-                null
-        ));
-
-        eventQueue.add(new WorkflowRunEvent(
-                run.getId(),
-                runAttempt,
-                Status.COMPLETED,
-                run.getUpdatedAt(),
-                runConclusion
-        ));
+    // Emit run events
+    if (run.getStatus() == Status.QUEUED) {
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.QUEUED, run.getUpdatedAt(), null));
+    } else if (run.getStatus() == Status.IN_PROGRESS) {
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.IN_PROGRESS, run.getStartedAt(), null));
+    } else if (run.getStatus() == Status.COMPLETED) {
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.IN_PROGRESS, run.getStartedAt(), null));
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.COMPLETED, run.getUpdatedAt(), run.getConclusion()));
     }
 
     state.updateRun(run);
@@ -108,88 +80,30 @@ private void handleRun(WorkflowRun run) {
         String jobConclusion = job.getConclusion();
 
         if (jobStatus == Status.QUEUED) {
-            eventQueue.add(new JobEvent(
-                    run.getId(),
-                    job.getId(),
-                    Status.QUEUED,
-                    null,
-                    job.getUpdatedAt()
-            ));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.QUEUED, null, job.getUpdatedAt()));
         } else if (jobStatus == Status.IN_PROGRESS) {
-            eventQueue.add(new JobEvent(
-                    run.getId(),
-                    job.getId(),
-                    Status.IN_PROGRESS,
-                    null,
-                    job.getStartedAt()
-            ));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.IN_PROGRESS, null, job.getStartedAt()));
         } else if (jobStatus == Status.COMPLETED) {
-            eventQueue.add(new JobEvent(
-                    run.getId(),
-                    job.getId(),
-                    Status.IN_PROGRESS,
-                    null,
-                    job.getStartedAt()
-            ));
-            
-            eventQueue.add(new JobEvent(
-                    run.getId(),
-                    job.getId(),
-                    Status.COMPLETED,
-                    jobConclusion,
-                    job.getCompletedAt()
-            ));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.IN_PROGRESS, null, job.getStartedAt()));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.COMPLETED, jobConclusion, job.getCompletedAt()));
         }
 
         state.updateJob(run.getId(), job);
 
-        // ------ STEPS ------
         for (Step step : job.getSteps()) {
             Status stepStatus = step.getStatus();
             String stepConclusion = step.getConclusion();
 
             if (stepStatus == Status.IN_PROGRESS) {
-                eventQueue.add(new StepEvent(
-                        run.getId(),
-                        job.getId(),
-                        step.getName(),
-                        Status.IN_PROGRESS,
-                        step.getStartedAt(),
-                        null
-                ));
+                eventQueue.add(new StepEvent(run.getId(), job.getId(), step.getNumber(), Status.IN_PROGRESS, step.getStartedAt(), null));
             } else if (stepStatus == Status.COMPLETED) {
-                // Emit start
-                eventQueue.add(new StepEvent(
-                        run.getId(),
-                        job.getId(),
-                        step.getName(),
-                        Status.IN_PROGRESS,
-                        step.getStartedAt(),
-                        null
-                ));
-                // Emit completed
-                eventQueue.add(new StepEvent(
-                        run.getId(),
-                        job.getId(),
-                        step.getName(),
-                        Status.COMPLETED,
-                        step.getCompletedAt(),
-                        stepConclusion
-                ));
+                eventQueue.add(new StepEvent(run.getId(), job.getId(), step.getNumber(), Status.IN_PROGRESS, step.getStartedAt(), null));
+                eventQueue.add(new StepEvent(run.getId(), job.getId(), step.getNumber(), Status.COMPLETED, step.getCompletedAt(), stepConclusion));
             }
         }
     }
 }
 
-
-
-    public void newRun(WorkflowRun run) {
-        handleRun(run);
-    }
-
-    public void newAttempt(WorkflowRun run) {
-        handleRun(run);
-    }
 
 
 public void runDiff(WorkflowRun oldRun, WorkflowRun newRun) {
@@ -223,16 +137,16 @@ public void runDiff(WorkflowRun oldRun, WorkflowRun newRun) {
             if (oldStep == null) {
                 // New step
                 if (newStep.getStatus() == Status.COMPLETED) {
-                    eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getName(), Status.IN_PROGRESS, newStep.getStartedAt(), null));
-                    eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getName(), newStep.getStatus(), newStep.getCompletedAt(), newStep.getConclusion()));
+                    eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getNumber(), Status.IN_PROGRESS, newStep.getStartedAt(), null));
+                    eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getNumber(), newStep.getStatus(), newStep.getCompletedAt(), newStep.getConclusion()));
                 } else {
                     Instant ts = newStep.getStatus() == Status.IN_PROGRESS ? newStep.getStartedAt() : newStep.getCompletedAt();
-                    eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getName(), newStep.getStatus(), ts, null));
+                    eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getNumber(), newStep.getStatus(), ts, null));
                 }
             } else if (oldStep.getStatus() != newStep.getStatus()) {
                 // Existing step, status changed → print only new status
                 Instant ts = newStep.getStatus() == Status.COMPLETED ? newStep.getCompletedAt() : newStep.getStartedAt();
-                eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getName(), newStep.getStatus(), ts, newStep.getStatus() == Status.COMPLETED ? newStep.getConclusion() : null));
+                eventQueue.add(new StepEvent(newRun.getId(), newJob.getId(), newStep.getNumber(), newStep.getStatus(), ts, newStep.getStatus() == Status.COMPLETED ? newStep.getConclusion() : null));
             }
         }
 
@@ -252,17 +166,18 @@ public void runDiff(WorkflowRun oldRun, WorkflowRun newRun) {
         WorkflowRunsResponse response = this.client.fetchWorkflowRuns(this.owner, this.repo);
 
         for (WorkflowRun run : response.getWorkflowRuns()) {
-            if (!this.state.isThereRun(run.getId())) {
-                this.handleRun(run);
+            if (!state.isThereRun(run.getId())) {
+                handleRun(run);
             } else {
-                WorkflowRun oldRun = this.state.getRun(run.getId());
-                if (oldRun.getRunAttempt() == run.getRunAttempt()) {
-                    this.runDiff(oldRun, run);
+                WorkflowRun oldRun = state.getRun(run.getId());
+                if (oldRun.getRunAttempt().equals(run.getRunAttempt())) {
+                    runDiff(oldRun, run);
                 } else {
-                    this.handleRun(run);
+                    handleRun(run);
                 }
             }
         }
+
 
         this.stateManager.saveState(this.state, this.owner, this.repo);
     }
