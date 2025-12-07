@@ -37,12 +37,13 @@ Create a `config.json` file in `src/main/resources/` with the following content:
 
 ```json
 {
-  "githubToken":    "",     # GitHub API authentication token
-  "owner":          "",     # Repository owner
-  "repository":     "",     # Repository name
-  "refreshRate":    10      # Seconds between API polling rounds
+  "githubToken":    "YOUR_GITHUB_TOKEN",
+  "owner":          "REPOSITORY_OWNER",
+  "repository":     "REPOSITORY_NAME",
+  "refreshRate":    10
 }
 ```
+The value of ```refreshRate``` is the number of seconds between end of one polling round and the beggining of the next.
 
 Make your own GitHub API token here: https://github.com/settings/tokens
 
