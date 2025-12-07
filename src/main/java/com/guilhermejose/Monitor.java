@@ -183,7 +183,6 @@ public void runDiff(WorkflowRun oldRun, WorkflowRun newRun) {
     }
 
     public void printEvents() {
-        System.out.println("=========================================");
         while (!eventQueue.isEmpty()) {
             Event event = eventQueue.poll();
             System.out.println(event.format());

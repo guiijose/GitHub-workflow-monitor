@@ -26,7 +26,7 @@ public class RepositoryStateManager {
         if (!Files.exists(file)) return new RepositoryState();
 
         try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(file))) {
-            System.out.println("loading existing state");
+            System.out.println("Loading existing state...");
             return (RepositoryState) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
