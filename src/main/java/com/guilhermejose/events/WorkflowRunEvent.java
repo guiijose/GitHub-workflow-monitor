@@ -30,7 +30,7 @@ public class WorkflowRunEvent extends Event {
             }
         } else if (status == Status.IN_PROGRESS) {
             if (runAttempt > 0) {
-                return String.format("%s NEW WORKFLOW RUN ATTEMPT\tid: %d\tattempt: %d",
+                return String.format("%s NEW WORKFLOW RUN ATTEMPT STARTED\tid: %d\tattempt: %d",
                         timestampString(), runId, runAttempt);
             } else {
                 return String.format("%s WORKFLOW RUN STARTED\tid: %d",
