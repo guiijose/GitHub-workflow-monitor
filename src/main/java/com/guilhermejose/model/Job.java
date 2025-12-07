@@ -37,33 +37,11 @@ public class Job implements Serializable {
     @JsonProperty("conclusion")
     private String conclusion;
 
-
     @JsonProperty("name")
     private String name;
 
     @JsonProperty("steps")
     private List<Step> steps;
-
-    @JsonProperty("check_run_url")
-    private String checkRunUrl;
-
-    @JsonProperty("labels")
-    private List<String> labels;
-
-    @JsonProperty("runner_id")
-    private long runnerId;
-
-    @JsonProperty("runner_name")
-    private String runnerName;
-
-    @JsonProperty("runner_group_id")
-    private long runnerGroupId;
-
-    @JsonProperty("runner_group_name")
-    private String runnerGroupName;
-
-    @JsonProperty("workflow_name")
-    private String workflowName;
 
     @JsonProperty("head_branch")
     private String headBranch;
@@ -180,62 +158,6 @@ public class Job implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCheckRunUrl() {
-        return checkRunUrl;
-    }
-
-    public void setCheckRunUrl(String checkRunUrl) {
-        this.checkRunUrl = checkRunUrl;
-    }
-
-    public List<String> getLabels() {
-        return labels;
-    }
-
-    public void setLabels(List<String> labels) {
-        this.labels = labels;
-    }
-
-    public long getRunnerId() {
-        return runnerId;
-    }
-
-    public void setRunnerId(long runnerId) {
-        this.runnerId = runnerId;
-    }
-
-    public String getRunnerName() {
-        return runnerName;
-    }
-
-    public void setRunnerName(String runnerName) {
-        this.runnerName = runnerName;
-    }
-
-    public long getRunnerGroupId() {
-        return runnerGroupId;
-    }
-
-    public void setRunnerGroupId(long runnerGroupId) {
-        this.runnerGroupId = runnerGroupId;
-    }
-
-    public String getRunnerGroupName() {
-        return runnerGroupName;
-    }
-
-    public void setRunnerGroupName(String runnerGroupName) {
-        this.runnerGroupName = runnerGroupName;
-    }
-
-    public String getWorkflowName() {
-        return workflowName;
-    }
-
-    public void setWorkflowName(String workflowName) {
-        this.workflowName = workflowName;
     }
 
     public String getHeadBranch() {

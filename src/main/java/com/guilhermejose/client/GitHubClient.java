@@ -49,7 +49,7 @@ public class GitHubClient {
     /**
      * Fetch workflow runs for a given repository.
      * @param owner The owner of the repository
-     * @param repo §The repository name
+     * @param repo The repository name
      * @return WorkflowRunsResponse containing the list of workflow runs
      */
     public WorkflowRunsResponse fetchWorkflowRuns(String owner, String repo) {
@@ -72,7 +72,11 @@ public class GitHubClient {
     }
 
     /**
-     * 
+     * Fetch jobs for a specific workflow run of a given repository
+     * @param owner The owner of the repository
+     * @param repo The repository name
+     * @param runId The identifier of the run
+     * @return JobsResponse the object containing a list of job objects
      */
     public JobsResponse fetchJobs(String owner, String repo, long runId) {
         String url = String.format("%s/repos/%s/%s/actions/runs/%d/jobs", BASE_URL, encode(owner), encode(repo), runId);

@@ -65,12 +65,12 @@ private void handleRun(WorkflowRun run) {
 
     // Emit run events
     if (run.getStatus() == Status.QUEUED) {
-        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.QUEUED, run.getUpdatedAt(), null));
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.QUEUED, run.getUpdatedAt(), null, run.getHeadSha()));
     } else if (run.getStatus() == Status.IN_PROGRESS) {
-        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.IN_PROGRESS, run.getStartedAt(), null));
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.IN_PROGRESS, run.getStartedAt(), null, run.getHeadSha()));
     } else if (run.getStatus() == Status.COMPLETED) {
-        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.IN_PROGRESS, run.getStartedAt(), null));
-        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.COMPLETED, run.getUpdatedAt(), run.getConclusion()));
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.IN_PROGRESS, run.getStartedAt(), null, run.getHeadSha()));
+        eventQueue.add(new WorkflowRunEvent(run.getId(), runAttempt, Status.COMPLETED, run.getUpdatedAt(), run.getConclusion(), run.getHeadSha()));
     }
 
     state.updateRun(run);
@@ -80,12 +80,12 @@ private void handleRun(WorkflowRun run) {
         String jobConclusion = job.getConclusion();
 
         if (jobStatus == Status.QUEUED) {
-            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.QUEUED, null, job.getUpdatedAt()));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.QUEUED, null, job.getUpdatedAt(), job.getHeadSha()));
         } else if (jobStatus == Status.IN_PROGRESS) {
-            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.IN_PROGRESS, null, job.getStartedAt()));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.IN_PROGRESS, null, job.getStartedAt(), job.getHeadSha()));
         } else if (jobStatus == Status.COMPLETED) {
-            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.IN_PROGRESS, null, job.getStartedAt()));
-            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.COMPLETED, jobConclusion, job.getCompletedAt()));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.IN_PROGRESS, null, job.getStartedAt(), job.getHeadSha()));
+            eventQueue.add(new JobEvent(run.getId(), job.getId(), Status.COMPLETED, jobConclusion, job.getCompletedAt(), job.getHeadSha()));
         }
 
         state.updateJob(run.getId(), job);
@@ -116,18 +116,18 @@ public void runDiff(WorkflowRun oldRun, WorkflowRun newRun) {
             // New job
             if (newJob.getStatus() == Status.COMPLETED) {
                 // Print both started and completed
-                eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), Status.IN_PROGRESS, null, newJob.getStartedAt()));
-                eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), newJob.getStatus(), newJob.getConclusion(), newJob.getCompletedAt()));
+                eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), Status.IN_PROGRESS, null, newJob.getStartedAt(), newJob.getHeadSha()));
+                eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), newJob.getStatus(), newJob.getConclusion(), newJob.getCompletedAt(), newJob.getHeadSha()));
             } else {
                 eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), newJob.getStatus(), null, 
-                    newJob.getStatus() == Status.QUEUED ? newJob.getUpdatedAt() : newJob.getStartedAt()));
+                    newJob.getStatus() == Status.QUEUED ? newJob.getUpdatedAt() : newJob.getStartedAt(), newJob.getHeadSha()));
             }
         } else if (oldJob.getStatus() != newJob.getStatus()) {
             // Existing job, status changed → print only the new status
             Instant timestamp = newJob.getStatus() == Status.COMPLETED ? newJob.getCompletedAt() :
                                 newJob.getStatus() == Status.IN_PROGRESS ? newJob.getStartedAt() :
                                 newJob.getUpdatedAt();
-            eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), newJob.getStatus(), newJob.getStatus() == Status.COMPLETED ? newJob.getConclusion() : null, timestamp));
+            eventQueue.add(new JobEvent(newRun.getId(), newJob.getId(), newJob.getStatus(), newJob.getStatus() == Status.COMPLETED ? newJob.getConclusion() : null, timestamp, newJob.getHeadSha()));
         }
 
         // Steps

@@ -25,7 +25,6 @@ public class Step implements Serializable {
     @JsonProperty("completed_at")
     private Instant completedAt;
 
-    // Getters and Setters
     public String getName() {
         return name;
     }

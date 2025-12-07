@@ -36,6 +36,9 @@ public class WorkflowRun implements Serializable {
     @JsonProperty("updated_at")
     private Instant updatedAt;
 
+    @JsonProperty("head_sha")
+    private String headSha;
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -54,6 +57,9 @@ public class WorkflowRun implements Serializable {
 
     public Long getRunAttempt() { return runAttempt; }
     public void setRunAttempt(Long runAttempt) { this.runAttempt = runAttempt; }
+
+    public String getHeadSha() { return this.headSha; }
+    public void setHeadSha(String headSha) { this.headSha = headSha; }
 
     public Instant getCreatedAt() { return createdAt; }
 
