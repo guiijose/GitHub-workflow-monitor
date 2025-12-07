@@ -24,10 +24,10 @@ public class JobEvent extends Event {
     @Override
     public String format() {
         if (status == Status.QUEUED) {
-            return String.format("%s JOB RUN QUEUED\trun: %d\tjob: %d\tSHA: %s\tbranch: %s",
+            return String.format("%s JOB RUN QUEUED\trun: %d\tjob: %d\tSHA: %s \tbranch: %s",
                     timestampString(), runId, jobId, commitSHA, headBranch);
         } else if (status == Status.IN_PROGRESS) {
-            return String.format("%s JOB RUN STARTED\trun: %d\tjob: %d\tSHA: %s\tbranch: %s",
+            return String.format("%s JOB RUN STARTED\trun: %d\tjob: %d\tSHA: %s \tbranch: %s",
                     timestampString(), runId, jobId, commitSHA, headBranch);
         } else if (status == Status.COMPLETED) {
             return String.format("%s JOB RUN COMPLETED\trun: %d\tjob: %d\tconclusion: %s\tSHA: %s\tbranch: %s",

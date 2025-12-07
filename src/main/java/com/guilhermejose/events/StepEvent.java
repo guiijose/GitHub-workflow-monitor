@@ -24,7 +24,7 @@ public class StepEvent extends Event {
     public String format() {
         if (status == Status.IN_PROGRESS || status == Status.QUEUED) {
             return String.format(
-                "%s STEP\t%s\tstep: %d\tjob: %d\trun: %d",
+                "%s STEP %s\tstep: %d\tjob: %d\trun: %d",
                 timestampString(),
                 (status == Status.IN_PROGRESS) ? "STARTED" : "QUEUED",
                 stepNumber,
