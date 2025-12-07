@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.io.Serializable;
 
-public class Job {
+public class Job implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty("id")
     private long id;
 

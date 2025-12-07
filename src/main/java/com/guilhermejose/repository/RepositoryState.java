@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.guilhermejose.model.Job; 
 import com.guilhermejose.model.WorkflowRun;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RepositoryState {
+public class RepositoryState implements Serializable {
 
     // Map indexed by run id
     private HashMap<Long, WorkflowRun> workflowRuns;

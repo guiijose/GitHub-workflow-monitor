@@ -45,3 +45,4 @@ src/main/resources/config.json
 .settings/
 .classpath
 .project
+data/

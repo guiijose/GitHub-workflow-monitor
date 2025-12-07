@@ -263,6 +263,8 @@ public void runDiff(WorkflowRun oldRun, WorkflowRun newRun) {
                 }
             }
         }
+
+        this.stateManager.saveState(this.state, this.owner, this.repo);
     }
 
     public void printEvents() {

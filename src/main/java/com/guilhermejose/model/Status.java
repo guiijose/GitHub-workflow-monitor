@@ -2,13 +2,16 @@ package com.guilhermejose.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.io.Serializable;
 
-public enum Status {
+public enum Status implements Serializable {
     QUEUED("queued"),
     IN_PROGRESS("in_progress"),
     COMPLETED("completed"),
     REQUESTED("requested"),
     WAITING("waiting");
+
+    private static final long serialVersionUID = 1L;
 
     private final String value;
 

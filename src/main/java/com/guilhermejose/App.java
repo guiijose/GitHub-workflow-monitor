@@ -17,8 +17,8 @@ public class App
         }
 
         GitHubClient gitHubClient = new GitHubClient(config.getGithubToken());
-        RepositoryState state = new RepositoryState();
-        RepositoryStateManager manager = new RepositoryStateManager("");
+        RepositoryStateManager manager = new RepositoryStateManager();
+        RepositoryState state = manager.loadState(config.getOwner(), config.getRepository());
 
         Monitor monitor = new Monitor(gitHubClient, state, manager, config.getOwner(), config.getRepository(), config.getRefreshRate());
 

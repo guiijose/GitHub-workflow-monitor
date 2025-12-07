@@ -3,9 +3,11 @@ package com.guilhermejose.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
+import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WorkflowRun {
+public class WorkflowRun implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
     private Long id;

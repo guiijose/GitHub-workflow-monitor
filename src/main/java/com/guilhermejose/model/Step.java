@@ -2,8 +2,11 @@ package com.guilhermejose.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
+import java.io.Serializable;
 
-public class Step {
+public class Step implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty("name")
     private String name;
 
